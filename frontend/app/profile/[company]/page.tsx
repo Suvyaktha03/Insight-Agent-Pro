@@ -1,29 +1,27 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import BriefCard from "@/components/BriefCard";
 
-async function getData(company: string) {
-  const res = await fetch(
-    `http://127.0.0.1:8000/brief/${company}`,
-    {
-      cache: "no-store"
-    }
-  );
+export default function Page() {
+  const params = useParams();
+  const company = params.company as string;
+  const [data, setData] = useState<any>(null);
 
-  return res.json();
-}
+  useEffect(() => {
+    fetch("https://automatic-space-happiness-76w5wpxrw552xqpp-8000.app.github.dev/brief/" + company)
+      .then(res => res.json())
+      .then(setData);
+  }, [company]);
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ company: string }>;
-}) {
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 text-white flex items-center justify-center">
+        <p className="text-slate-400">Loading...</p>
+      </div>
+    );
+  }
 
-  const { company } = await params;
-
-  const data = await getData(company);
-
-  return (
-    <div className="p-8">
-      <BriefCard data={data} />
-    </div>
-  );
+  return <BriefCard data={data} />;
 }

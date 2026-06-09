@@ -1,4 +1,4 @@
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 import yfinance as yf
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +13,8 @@ def get_news(company):
                     max_results=10
                 )
             )
-    except:
+    except Exception as e:
+        print(f"News fetch error: {e}")
         return []
 
 
